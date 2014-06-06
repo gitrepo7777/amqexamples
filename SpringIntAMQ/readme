@@ -1,0 +1,13 @@
+Little details of code:
+
+The main flow of the application is contained in context.xml, which is loaded by ClassPathApplicationContext.
+
+GatewayProxyFactoryBean does all the work of creating the proxy of SampleGateway and invoking the method serve() on the proxy and sending argument to JMSOutboundGateway.
+
+The OutBoundGateway then delivers it to ActiveMQ.
+
+On the other end, JMSInboundGateway waits for the requestQueue, and traps this request to transfer the SOAP XML message to SI transformers and routers to convert it to POJO request.
+
+The request is handled by Service.add(Data) and the response is put back on the inboundGateway which delivers it back to ActiveMQ.
+
+The ActiveMQ transfers the response back to client JMSOutboundGateway which transfers it back to SampleGateway as a return value.
